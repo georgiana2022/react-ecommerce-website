@@ -67,7 +67,7 @@ export default class Registration extends Component {
                   type='password' 
                   name={'password'} 
                   value={password} 
-                  placeholder='Enter your password' 
+                  placeholder='Enter your pass' 
                   onChange={this.handleChange}></Input>
               </div>
 
