@@ -1,11 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Registration from './components/Authentication/Registration/Registration';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Registration } from './components/Authentication/Registration/Registration';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <Registration />
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
 root.render(
   <React.StrictMode>
     <Registration />
