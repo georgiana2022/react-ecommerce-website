@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Input, Button } from 'reactstrap';
 import './Registration.scss';
+import { User } from '../../../contexts/user'
+import { UserService } from '../../../services/userService';
+import { ValidationConstants } from '../../../constants/validationConstants';
+
 
 interface IProps {
 }
@@ -9,28 +13,26 @@ interface IRegistrationState {
   firstName?: string;
   lastName?: string;
   email?: string;
-  password?: string
+  password?: string;
+  confirmPassword?: string;
+  fieldValidationErrorMessage?: string;
 }
+
 export class Registration extends Component<IProps, IRegistrationState> {
+  private fieldValidationErrorMessage!: string;
   constructor(props: IProps) {
     super(props);
     this.state = {
       firstName: '',
-      //lastName: '',
-      //email: '',
-      //password: ''
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      fieldValidationErrorMessage: ''
     }
   }
   
-  handleChange = (e: any) => {
-    const { name, value } = e.target;
-    console.log(name, value)
-    this.setState({
-      [name]: value
-    })
-  }
-
-private isFormValid(user: User): boolean {
+private isFormValid(user: User):boolean {
   if(user.firstName === '' || (user.firstName && user.firstName.length <= 2)) {
     this.setState({
       fieldValidationErrorMessage: 'This field requires more than 2 characters.'
@@ -40,23 +42,88 @@ private isFormValid(user: User): boolean {
 
   if(user.lastName === '' || (user.lastName && user.lastName.length <= 2)) {
     this.setState({
-      fieldValidationErrorMessage: 'This field requires more than 2 characters.'
+       fieldValidationErrorMessage: 'This field requires more than 2 characters.'
     });
     return false;
   }
 
-  if(!Validationuser.firstName === '' || (user.firstName && user.firstName.length <= 2)) {
+  if(!ValidationConstants.emailPatern.test(`${user.email}`)) {
     this.setState({
-      fieldValidationErrorMessage: 'This field requires more than 2 characters.'
+       fieldValidationErrorMessage: 'Email is not valid.'
     });
     return false;
   }
+
+  if(!ValidationConstants.passwordPattern.test(`${user.password}`)) {
+    this.setState({
+      fieldValidationErrorMessage: 'Password is not valid.'
+   });
+    return false
+  }
+
+  if(!(this.state.confirmPassword === user.password)) {
+    fieldValidationErrorMessage: 'Passwords do not match.'
+  }
+
+  return true;
 }
+
+  public handleChange = (e: any) => {
+    const { name, value } = e.target;
+    //console.log(name, value)
+    this.setState({
+      [name]: value
+    });
+  }
+
+  componentDiUpdate() {
+    //console.log(this.state);
+  }
+
+  public save = async () => {
+    const { firstName, lastName, email, password} = this.state;
+    const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    user.password = password;
+
+    if(!this.isFormValid(user)) {
+      return;
+    }
+
+    const userService = new UserService();
+    userService.register(user);
+    // console.log(user);
+  }
+
+// private isFormValid(user: any) : boolean {
+//   if(user.firstName === '' || (user.firstName && user.firstName.length <= 2)) {
+//     this.setState({
+//       fieldValidationErrorMessage: 'This field requires more than 2 characters.'
+//     });
+//     return false;
+//   }
+
+//   if(user.lastName === '' || (user.lastName && user.lastName.length <= 2)) {
+//     this.setState({
+//       fieldValidationErrorMessage: 'This field requires more than 2 characters.'
+//     });
+//     return false;
+//   }
+
+//   if(!Validationuser.firstName === '' || (user.firstName && user.firstName.length <= 2)) {
+//     this.setState({
+//       fieldValidationErrorMessage: 'This field requires more than 2 characters.'
+//     });
+//     return false;
+//   }
+// }
 
 
 
   render() {
-    const { firstName, lastName, email, password, confirmPassword, fieldValidationErrorMessage} = this.state;
+    const { firstName, lastName, email, password, confirmPassword, fieldValidationErrorMessage } = this.state;
     // const firstName = this.state.firstName;
     // const lastName = this.state.lastName;
     return (
@@ -71,17 +138,18 @@ private isFormValid(user: User): boolean {
               <div className='first-name-item-container input-item-container'>
                 <Input 
                   type='text' 
-                  name={'first-name'} 
+                  name={'firstName'} 
                   value={firstName} 
                   placeholder='Enter your first name' 
                   onChange={this.handleChange}
                   />
+                  
               </div>
 
               <div className='last-name-item-container input-item-container'>
                 <Input 
                   type='text' 
-                  name={'last-name'} 
+                  name={'lastName'} 
                   value={lastName} 
                   placeholder='Enter your last name' 
                   onChange={this.handleChange}
