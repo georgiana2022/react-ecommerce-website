@@ -5,18 +5,19 @@ import { User } from '../../../contexts/user'
 import { UserService } from '../../../services/userService';
 import { ValidationConstants } from '../../../constants/validationConstants';
 import { Link } from 'react-router-dom';
+import { UserRegistrationForm } from './Model/UserRegistrationForm';
 
 
 interface IProps {
 }
 
 interface IRegistrationState {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-  fieldValidationErrorMessage?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  fieldValidationErrorMessage: string;
 }
 
 export class Registration extends Component<IProps, IRegistrationState> {
@@ -63,20 +64,21 @@ export class Registration extends Component<IProps, IRegistrationState> {
       return false
     }
 
-    if(!(this.state.confirmPassword === user.password)) {
+    if(!(user.confirmPassword === user.password)) {
       this.setState({
       fieldValidationErrorMessage: 'Passwords do not match.'
     });
+    return false;
     }
     return true;
   }
 
   public handleChange = (e: any) => {
     const { name, value } = e.target;
+
+    const newState = { [name]: value } as Pick<IRegistrationState, keyof IRegistrationState>;
     //console.log(name, value)
-    this.setState({
-      [name]: value
-    });
+    this.setState(newState);
   }
 
   componentDiUpdate() {
@@ -84,16 +86,29 @@ export class Registration extends Component<IProps, IRegistrationState> {
   }
 
   public save = async () => {
-    const { firstName, lastName, email, password} = this.state;
-    const user = new User();
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.email = email;
-    user.password = password;
+    const { firstName, lastName, email, password, confirmPassword} = this.state;
 
-    if(!this.isFormValid(user)) {
+    const userDto: UserRegistrationForm = {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword
+    };
+
+    if(!this.isFormValid(userDto)) {
       return;
     }
+
+    const user: User = {
+      firstName,
+      lastName,
+      email,
+      password
+    };
+    
+
+    
 
     const userService = new UserService();
     userService.register(user);
