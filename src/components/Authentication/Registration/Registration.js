@@ -166,7 +166,7 @@ export class Registration extends Component {
               <div className='register-button-container'>
                 <Button color="primary" onClick={this.save}>Register</Button>
               </div>
-              <div>{fieldValidationErrorMessage}</div>
+              <div style={{color: 'red'}}>{fieldValidationErrorMessage}</div>
             </Form>
           </div>
           <p>Have already an account? <Link to={'/login'}>Login here</Link></p>

@@ -1,7 +1,7 @@
 import { Component } from "react";
 import { Button, Form, Input } from "reactstrap";
 import './Login.scss';
-import { UserLoginForm } from "./Model/UserLoginForm";
+//import { UserLoginForm } from "./Model/UserLoginForm";
 import { UserService } from "../../../services/userService";
 
 
@@ -32,11 +32,23 @@ export class Login extends Component {
     const users = userService.getAll();
     users.then((data) => {
       console.log(data);
+      const user = data.find(user => user.email === email && user.password === password);
+      if (user) {
+        //redirect
+        this.setState({
+          fieldValidationErrorMessage: ''
+        });
+      } else {
+        //error
+        this.setState({
+          fieldValidationErrorMessage: 'Given email and password are incorrect.'
+        });
+      }
     })
   }
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, fieldValidationErrorMessage } = this.state;
    return (
     <div className='login-content'>
       <div className='login-container'>
@@ -69,6 +81,7 @@ export class Login extends Component {
             <div className='login-button-container'>
                 <Button className='login-button' color="primary" onClick={this.onLogin.bind(this)}>Login</Button>
               </div>
+              <div className="field-validation-error-message">{fieldValidationErrorMessage}</div>
           </Form>
         </div>
       </div>
