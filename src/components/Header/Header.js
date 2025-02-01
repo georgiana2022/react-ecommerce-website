@@ -27,17 +27,21 @@ export class Header extends Component {
         </Link>
       </div>
 
-      <div className="search-container">
-        <Search/>
+      <div className="my-account-menu">
+        <div className="search-container">
+          <Search/>
+        </div>
+
+        <div className="user-container">
+          <Link to={'/login'}><FaUserAlt size={28} /></Link>
+        </div>
+
+        <div className="cart-container">
+        <Link to={'/cart'}><FaShoppingCart size={28} /></Link>
+        </div>
+
       </div>
 
-      <div className="user-container">
-        <Link to={'/login'}><FaUserAlt size={28} /></Link>
-      </div>
-
-      <div className="cart-container">
-      <Link to={'/cart'}><FaShoppingCart size={28} /></Link>
-      </div>
     </div>
     )
   }

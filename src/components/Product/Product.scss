@@ -1,0 +1,24 @@
+.product-container {
+    
+    width: 240px;
+    text-align: center;
+    .price-container {
+      color: #ef2809;
+    }
+  
+    .product-image-container {
+      img {
+        width: 240px;
+        height: 360px;
+      }
+    }
+  
+    .product-name-container {
+      color: #999;
+    }
+  
+    .product-brand-container {
+      text-transform: uppercase;
+    }
+  
+}

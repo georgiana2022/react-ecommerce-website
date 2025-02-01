@@ -50,7 +50,7 @@ export class Login extends Component {
 
   render() {
     const { email, password, fieldValidationErrorMessage } = this.state;
-   return (
+    return (
     <div className='login-content'>
       <div className='login-container'>
         <div className='login-title-container'>
