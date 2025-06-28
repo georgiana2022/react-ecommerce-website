@@ -11,9 +11,9 @@ export default class Router extends Component {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home/>}></Route>
+          <Route path="/admin/product" element={<AdminProduct/>}></Route>
           <Route path="/registration" element={<Registration/>}></Route>
           <Route path="/login" element={<Login/>}></Route>
-          <Route path="/admin/product" element={<AdminProduct/>}></Route>
         </Routes>
       </BrowserRouter>
     );

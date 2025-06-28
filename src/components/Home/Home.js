@@ -6,8 +6,6 @@ import './Home.scss';
 import ceas from '../../images/ceas.jpg';
 import geanta from '../../images/geanta.jpg'
 
-
-
 export class Home extends Component {
   constructor(props) {
     super(props);
@@ -16,37 +14,29 @@ export class Home extends Component {
     }
   }
 
- 
   componentDidMount() {
+    this.getAllProducts();
+  }
 
-    // fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products.json`, {
-    //   method: 'GET'
-    // })
-    // .then(response => response.json())
-    // .then((data) => {
-    //   console.log(data);
-    // });
-  
-
-    
-    this.setState({
-      products: [
-        {
-          name: "Ceas analog cu coroana texturata",
-          image: ceas,
-          brand: "Fossil",
-          price: 500.99
-        },
-
-        {
-          name: "Geanta crossbody de piele Primula",
-          image: geanta,
-          brand: "Furla",
-          price: 1429.99
-        }
-      ]
+  getAllProducts = () => {
+    fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products.json`, {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then((data) => {
+      const products = [];
+      Object.keys(data).forEach((key) => {
+        data[key].id = key;
+        products.push(data[key])
+      })
+      console.log(data);
+      console.log(products);
+      this.setState({
+        products
+      })
     })
   }
+
 
   render() {
     const products = this.state.products && this.state.products.map((product, index) =>
