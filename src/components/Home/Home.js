@@ -10,8 +10,11 @@ export class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: []
-    }
+      products: [],
+      searchQuery: ""
+    };
+    this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
+    this.searchProducts = this.searchProducts.bind(this);
   }
 
   componentDidMount() {
@@ -37,15 +40,34 @@ export class Home extends Component {
     })
   }
 
+  rerenderParentCallback() {
+    this.forceUpdate();
+  }
+
+  searchProducts = (value) => {
+    const { products } = this.state;
+    const searchProducts = products
+      .filter(product => value && `${product.name}`.toLocaleLowerCase().search(value.toLocaleLowerCase()) > -1 );
+      
+    this.setState({
+      products: searchProducts,
+      searchQuery: value
+    })
+  }
 
   render() {
-    const products = this.state.products && this.state.products.map((product, index) =>
+    const gender = localStorage.getItem("gender");
+    const category = localStorage.getItem("category");
+    const searchQuery = this.state.searchQuery;
+    const products = this.state.products && this.state.products
+    .filter(product => product.gender === gender && (category === null || product.category === category))
+    .map((product, index) =>
       <Product key={index} product={product}/>
     );
     return (
       <div className="home-container">
-        <Header/>
-        <MainMenu/>
+        <Header searchProducts={this.searchProducts} rerenderParentCallback={this.rerenderParentCallback}/>
+        <MainMenu rerenderParentCallback={this.rerenderParentCallback}/>
           <div className="products-container">
             {products}
           </div>

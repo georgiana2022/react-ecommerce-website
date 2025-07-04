@@ -5,19 +5,27 @@ import { Search } from '../Search/Search';
 import { FaShoppingCart, FaUserAlt } from "react-icons/fa";
 import './Header.scss'
 
-
 export class Header extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  onSelectGender = (gender) => {
+    localStorage.setItem ("gender", gender);
+    this.props.rerenderParentCallback();
+  }
+
   render() {
     return (
     <div className="header-container">
       <div className="header-tabs-container">
 
         <div className="header-tab-container">
-          <Link to={'/'}>FEMEI</Link>
+          <Link onClick={() => this.onSelectGender(0)} to={'/'}>FEMEI</Link>
         </div>
 
         <div className="header-tab-container">
-          <Link to={'/barbati'}>BARBATI</Link>
+          <Link onClick={() => this.onSelectGender(1)} to={'/'}>BARBATI</Link>
         </div>
       </div>
 
@@ -29,7 +37,7 @@ export class Header extends Component {
 
       <div className="my-account-menu">
         <div className="search-container">
-          <Search/>
+          <Search searchProducts={this.props.searchProducts}/>
         </div>
 
         <div className="user-container">

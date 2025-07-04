@@ -16,6 +16,9 @@ export class Search extends Component {
     this.setState({
      [name]: value
     })
+    if (value.length > 1) {
+      this.props.searchProducts(value)
+    }
   }
 
   render() {
