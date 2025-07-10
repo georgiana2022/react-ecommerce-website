@@ -3,8 +3,6 @@ import { Header } from '../Header/Header';
 import {MainMenu} from '../MainMenu/MainMenu'
 import { Product } from '../Product/Product';
 import './Home.scss';
-import ceas from '../../images/ceas.jpg';
-import geanta from '../../images/geanta.jpg'
 
 export class Home extends Component {
   constructor(props) {
@@ -45,6 +43,24 @@ export class Home extends Component {
   }
 
   searchProducts = (value) => {
+    fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products.json`, {
+      method: 'GET'
+    })
+    .then(response => response.json())
+    .then((data) => {
+      Object.keys(data).forEach((key) => {
+        data[key].id = key;
+        products.push(data[key]);
+      })
+
+      const searchProducts = products
+      .filter(product =>
+        value &&
+        (`${product.name}`.toLocaleLowerCase().search(value.toLocaleLowerCase()) > -1 ||
+      `${product.brand}`.toLocaleLowerCase().search(value.toLocaleLowerCase()) > -1));
+      
+      console.log(searchProducts)
+    })
     const { products } = this.state;
     const searchProducts = products
       .filter(product => value && `${product.name}`.toLocaleLowerCase().search(value.toLocaleLowerCase()) > -1 );
@@ -56,20 +72,26 @@ export class Home extends Component {
   }
 
   render() {
+    const cartCountItems = this.state.products.filter(product => product.isInCart).length;
+    localStorage.setItem("cartCountItems", cartCountItems);
+    
     const gender = localStorage.getItem("gender");
     const category = localStorage.getItem("category");
-    const searchQuery = this.state.searchQuery;
-    const products = this.state.products && this.state.products
+    
+    const products = this.state.products
     .filter(product => product.gender === gender && (category === null || product.category === category))
     .map((product, index) =>
-      <Product key={index} product={product}/>
+      <Product key={index} product={product} rerenderParentCallback={this.rerenderParentCallback}/>
     );
+ 
     return (
       <div className="home-container">
-        <Header searchProducts={this.searchProducts} rerenderParentCallback={this.rerenderParentCallback}/>
+        <Header cartCountItems={cartCountItems} searchProducts={this.searchProducts} rerenderParentCallback={this.rerenderParentCallback}/>
         <MainMenu rerenderParentCallback={this.rerenderParentCallback}/>
           <div className="products-container">
+            
             {products}
+           
           </div>
       </div>
     )

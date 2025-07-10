@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import './Product.scss';
-import ceas from '../../images/ceas.jpg';
+import { Button } from 'reactstrap';
 
 export class Product extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   getDecimalPart = (number) => {
     if (Number.isInteger(number)) {
@@ -16,6 +13,16 @@ export class Product extends Component {
     return Number(decimalString);
   }
 
+  onAddToCart = (product) => {
+    product.isInCart = true;
+    fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products/${product.id}.json`, {
+      method: "PATCH",
+      body:JSON.stringify(product)
+    }).then((data) => {
+      console.log(data);
+      this.props.rerenderParentCallback();
+    });
+  }
 
   render() {
     const product = this.props.product;
@@ -25,10 +32,6 @@ export class Product extends Component {
 
         <div className='product-image-container'>
           <img src={product.image} alt='ceas'></img>
-        </div>
-
-        <div className='wishlist-icon-container'>
-
         </div>
 
         <div className='product-brand-container'>
@@ -42,9 +45,12 @@ export class Product extends Component {
         <div className='price-container'>
           <h4>
             {productPriceInteger}
-            <sup className='price-decimals'>{this.getDecimalPart(product.price)}</sup></h4>
+            <sup className='price-decimals'>{this.getDecimalPart(product.price)}</sup>Lei
+          </h4>
         </div>
-
+        <div className='add-to-cart-button-container'>
+          <Button className='add-to-cart-button' color="primary" onClick={() => this.onAddToCart(product)}>Adauga in cos</Button>
+        </div>
       </div>
     )
   }

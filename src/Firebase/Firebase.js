@@ -3,6 +3,7 @@ import 'firebase/compat/storage';
 import 'firebase/compat/analytics';
 
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyC7xqBAz-hqoXBr1EjrI8uwhlcqt0H3i4g",
   authDomain: "web-development-9dc40.firebaseapp.com",
