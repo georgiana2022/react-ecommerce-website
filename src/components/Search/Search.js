@@ -32,7 +32,6 @@ export class Search extends Component {
           placeholder="Search ..."
           onChange={this.handleChange}
         />
-
       </div>
     )
   }

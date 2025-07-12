@@ -1,24 +1,27 @@
 .product-container {
-    
     width: 240px;
-    text-align: center;
-    .price-container {
-      color: #ef2809;
-    }
-  
     .product-image-container {
       img {
         width: 240px;
         height: 360px;
       }
     }
-  
-    .product-name-container {
-      color: #999;
+    .price-container, .product-brand-container, .product-name-container, .add-to-cart-button-container {
+      padding-left: 10px;
+      padding-right: 10px;
     }
-  
+    .price-container {
+      color: #ef2809;
+    }
     .product-brand-container {
       text-transform: uppercase;
     }
-  
+    .product-name-container {
+      color: #999;
+    }
+    .add-to-cart-button-container {
+      .add-to-cart-button {
+        width: 100%;
+      }
+    }
 }

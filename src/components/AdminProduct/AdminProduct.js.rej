@@ -1,0 +1,142 @@
+diff a/src/components/AdminProduct/AdminProduct.js b/src/components/AdminProduct/AdminProduct.js	(rejected hunks)
+@@ -14,3 +14,3 @@
+       price: null,
+-      image: null,
++      image: "",
+       gender: "0",
+@@ -79,3 +79,3 @@
+         brand: "",
+-        price: null,
++        price: "",
+         image: "",
+@@ -112,3 +112,3 @@
+     };
+-    if(!product.image.name) {
++    if(!product.image) {
+       this.onUpdate(product);
+@@ -117,65 +117,65 @@
+     }
+-}
+-
+-onAdd = (product) => {
+-  fetch (`https://web-development-9dc40-default-rtdb.firebaseio.com/users.json`, {
+-    method: 'POST',
+-    body: JSON.stringify(product)
+-  }).then((data) => {
+-    console.log(data);
+-    this.getAllProducts();
+-  })
+-}
++  }
+ 
+-OnUpdate = (product) => {
+-  fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/users/${product.id}.json`, {
+-      method: "PATCH",
++  onAdd = (product) => {
++    fetch (`https://web-development-9dc40-default-rtdb.firebaseio.com/products.json`, {
++      method: 'POST',
+       body: JSON.stringify(product)
+-  }).then((data) => {
++    }).then((data) => {
+       console.log(data);
+       this.getAllProducts();
+-  }) 
+-}
++    })
++  }
+ 
+-onUploadImage = (product) => {
+-  const uploadTask =  storage.ref(`images/${product.image.name}`).put(product.image);
+-  uploadTask.on('state_changed', 
+-  (snapshot) => {
+-    //progress function ...
+-  },
+-  (error) => {
+-    // error function
+-    console.log(error);
+-  },
+-  () => {
+-    //complete function
+-    storage.ref('images').child(product.image.name).getDownloadURL().then(image => {
+-      console.log(image);
+-      product.image = image;
+-      if (product.id) {
+-      this.onUpdate(product)
+-    } else {
+-      this.onAdd(product);
+-    }
+-  })
+-});
+-}
++  onUpdate = (product) => {
++    fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products/${product.id}.json`, {
++        method: "PATCH",
++        body: JSON.stringify(product)
++    }).then((data) => {
++        console.log(data);
++        this.getAllProducts();
++    }) 
++  }
+ 
+-onDelete = (id) => {
+-  fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/users/${id}.json`, {
+-    //method: "DELETE",
+-  }).then((data) => {
+-    console.log(data);
+-    this.getAllProducts();
++  onUploadImage = (product) => {
++    const uploadTask =  storage.ref(`images/${product.image.name}`).put(product.image);
++    uploadTask.on('state_changed', 
++    (snapshot) => {
++      //progress function ...
++    },
++    (error) => {
++      // error function
++      console.log(error);
++    },
++    () => {
++      //complete function
++      storage.ref('images').child(product.image.name).getDownloadURL().then(image => {
++        console.log(image);
++        product.image = image;
++        if (product.id) {
++        this.onUpdate(product)
++      } else {
++        this.onAdd(product);
++      }
++    })
+   });
+-  this.onToggleProductDeleteModal();
+-}
++  }
+ 
+-onToggleProductDeleteModal = (product) => {
+-  this.setState({
+-    id: product?.id,
+-    name: product?.name,
+-    isOpenProductDeleteModal:!this.state.isOpenProductDeleteModal
+-  })
+-}
++  onDelete = (id) => {
++    fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products/${id}.json`, {
++      method: "DELETE",
++    }).then((data) => {
++      console.log(data);
++      this.getAllProducts();
++    });
++    this.onToggleProductDeleteModal();
++  }
++
++  onToggleProductDeleteModal = (product) => {
++    this.setState({
++      id: product?.id,
++      name: product?.name,
++      isOpenProductDeleteModal:!this.state.isOpenProductDeleteModal
++    })
++  }
+ 
+@@ -294,3 +294,3 @@
+           <ModalFooter>
+-            <Button color='primary' onClick={this.onDelete(id)}>Delete</Button>
++            {/* <Button color='primary' onClick={this.onDelete(id)}>Delete</Button> */}
+             <Button color='danger' onClick={this.onToggleProductDeleteModal}>Cancel</Button>

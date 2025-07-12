@@ -12,7 +12,7 @@ export  class AdminProduct extends Component {
       name: "",
       brand: "",
       price: null,
-      image: "",
+      image: null,
       gender: "0",
       category: "0",
       isOpenProductModal: false,
@@ -22,7 +22,7 @@ export  class AdminProduct extends Component {
     }
 
     this.onToggleProductModal = this.onToggleProductModal.bind(this);
-    this.onToggleProductDeleteModal = this.onToggleProductDeleteModal.bind(this);
+    //this.onToggleProductDeleteModal = this.onToggleProductDeleteModal.bind(this);
     this.onSave = this.onSave.bind(this);
 
     this.adminProductRef = React.createRef();
@@ -77,8 +77,8 @@ export  class AdminProduct extends Component {
         id: "",
         name: "",
         brand: "",
-        price: "",
-        image: "",
+        price: null,
+        image: null,
         gender: "",
         category: ""
       });
@@ -108,9 +108,10 @@ export  class AdminProduct extends Component {
       price,
       image,
       gender,
-      category
+      category, 
+      isInCart: false
     };
-    if(!product.image) {
+    if(!product.image.name) {
       this.onUpdate(product);
     } else {
       this.onUploadImage(product);
@@ -161,142 +162,160 @@ export  class AdminProduct extends Component {
   });
   }
 
-  onDelete = (id) => {
-    fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products/${id}.json`, {
-      method: "DELETE",
-    }).then((data) => {
-      console.log(data);
-      this.getAllProducts();
-    });
-    this.onToggleProductDeleteModal();
-  }
+  // onDelete = (id) => {
+  //   fetch(`https://web-development-9dc40-default-rtdb.firebaseio.com/products/${id}.json`, {
+  //     method: "DELETE",
+  //   }).then((data) => {
+  //     console.log(data);
+  //     this.getAllProducts();
+  //   });
+  //   this.onToggleProductDeleteModal();
+  // }
 
-  onToggleProductDeleteModal = (product) => {
-    this.setState({
-      id: product?.id,
-      name: product?.name,
-      isOpenProductDeleteModal:!this.state.isOpenProductDeleteModal
-    })
-  }
+  // onToggleProductDeleteModal = (product) => {
+  //   this.setState({
+  //     id: product?.id,
+  //     name: product?.name,
+  //     isOpenProductDeleteModal:!this.state.isOpenProductDeleteModal
+  //   })
+  // }
 
   render() {
     const { id, name, brand, price, image, gender, category, isOpenProductModal, isOpenProductDeleteModal, products } = this.state;
     const tableProducts = products && products.map((product, id) => {
       return (
-        <tr key={id}>
-          <td>{id + 1}</td>
-          <td><img className='' src={product.image}/></td>
-          <td>{product.name}</td>
-          <td>{product.brand}</td>
-          <td>{product.price}</td>
-          <td>{product.gender}</td>
-          <td>{product.category}</td>
-          <td className='actions-container'>
-            <Button 
-            color="secondary" 
-            className='edit-button' 
-            onClick={() => this.onToggleProductModal(product)}
-            >
-              Edit
-            </Button>
-            <Button 
-            color="danger" 
-            className='delete-button'
-            onClick={() => this.onToggleProductDeleteModal(product)}
-            >
-              Delete
-            </Button>
-          </td>
-        </tr>
+              <tr key={id}>
+                <td>{id + 1}</td>
+                <td><img className='' src={product.image}/></td>
+                <td>{product.name}</td>
+                <td>{product.brand}</td>
+                <td>{product.price}</td>
+                <td>{product.gender}</td>
+                <td>{product.category}</td>
+                <td className='actions-container'>
+                  <Button 
+                  color="secondary" 
+                  className='edit-button' 
+                  onClick={() => this.onToggleProductModal(product)}
+                  >
+                    Edit
+                  </Button>
+                  <Button 
+                  color="danger" 
+                  className='delete-button'
+                  //onClick={() => this.onToggleProductDeleteModal(product)}
+                  >
+                    Delete
+                  </Button>
+                </td>
+              </tr>
+
       )
     })
-    return (
-      <div className='table-container'>
-        <div className='main-header'>
-          <div className='table-title-container'>
-            <h1>Products</h1>
-          </div>
-          <div className='add-button-container'>
-            <Button color='success' onClick={this.onToggleProductModal}>Add</Button>
-          </div>
-        </div>
-        <hr></hr>
-        <Table>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Brand</th>
-              <th>Price</th>
-              <th>Gender</th>
-              <th>Category</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableProducts}
-          </tbody>
-        </Table>
-        <Modal 
-        isOpen={isOpenProductModal} 
-        toggle={this.onToggleProductModal} 
-        backdrop={this.state.backdrop}
-        ref={this.adminAddProductModalRef}
-        >
-          <ModalHeader toggle={this.onToggleProductModal}>{ id ? 'Edit' : 'Add' } product</ModalHeader> 
-          <ModalBody>
-            <Form inline onSubmit={(event) => event.preventDefault()}>
-              <FormGroup>
-                <Label for="name">Name</Label>
-                <Input type="text" name="name" value={name} onChange={this.handleChange}></Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="brand">Brand</Label>
-                <Input type="text" name="brand" value={brand} onChange={this.handleChange}></Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="price">Price</Label>
-                <Input type="number" name="price"value={price}  onChange={this.handleChange}></Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="image">Image</Label>
-                <Input type="file" name="image" value={image} onChange={this.handleImageAsFile}></Input>
-                <img className='' src={image}/>
-              </FormGroup>
-              <FormGroup>
-                <Label for="gender">Gender</Label>
-                <Input type="select" name="gender" value={gender} onChange={this.handleChange}>
-                  <option value={'0'}>Femei</option>
-                  <option value={'1'}>Barbati</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="category">Category</Label>
-                <Input type="select" name="category" value={category} onChange={this.handleChange}>
-                  <option value={'0'}>Ceasuri</option>
-                  <option value={'1'}>Genti</option>
-                   <option value={'1'}>Blugi</option>
-                    <option value={'1'}>Camasi</option>
-                </Input>
-              </FormGroup>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color='primary' onClick={this.onSave}>Save</Button>
-            <Button color='danger' onClick={this.onSave}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
 
-        <Modal isOpen={isOpenProductDeleteModal} toggle={this.onToggleProductDeleteModal}>
-          <ModalHeader>Delete product</ModalHeader>
-          <ModalBody><p>Are you sure you want to delete product: {name}?</p></ModalBody>
-          <ModalFooter>
-            {/* <Button color='primary' onClick={this.onDelete(id)}>Delete</Button> */}
-            <Button color='danger' onClick={this.onToggleProductDeleteModal}>Cancel</Button>
-          </ModalFooter>
-        </Modal>
-      </div>
-    )
+
+
+
+      return (
+        <div className='table-container'>
+          <div className='main-header'>
+            <div className='table-title-container'>
+              <h1>Products</h1>
+            </div>
+            <div className='add-button-container'>
+              <Button color='success' onClick={this.onToggleProductModal}>Add</Button>
+            </div>
+          </div>
+          <hr></hr>
+          <Table>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Gender</th>
+                <th>Category</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* <tr>
+                <td>1</td>
+                <td><img className='' src={ceas}/></td>
+                <td>Ceas analog cu coroana texturata</td>
+                <td>Fossil</td>
+                <td>500.99</td>
+                <td className='actions-container'>
+                  <Button color="secondary" className='edit-button'>Edit</Button>
+                  <Button color="danger" className='delete-button'>Delete</Button>
+                </td>
+              </tr> */}
+              {tableProducts}
+            </tbody>
+          </Table>
+
+          <Modal 
+          isOpen={isOpenProductModal} 
+          toggle={this.onToggleProductModal} 
+          backdrop={this.state.backdrop}
+          ref={this.adminAddProductModalRef}
+          >
+            <ModalHeader toggle={this.onToggleProductModal}>{ id ? 'Edit' : 'Add' } product</ModalHeader> 
+            <ModalBody>
+              <Form inline onSubmit={(event) => event.preventDefault()}>
+                <FormGroup>
+                  <Label for="name">Name</Label>
+                  <Input type="text" name="name" value={name} onChange={this.handleChange}></Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="brand">Brand</Label>
+                  <Input type="text" name="brand" value={brand} onChange={this.handleChange}></Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="price">Price</Label>
+                  <Input type="number" name="price"value={price}  onChange={this.handleChange}></Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="image">Image</Label>
+                  <Input type="file" name="image" value={image} onChange={this.handleImageAsFile}></Input>
+                  <img className='' src={image}/>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="gender">Gender</Label>
+                  <Input type="select" name="gender" value={gender} onChange={this.handleChange}>
+                    <option value={'0'}>Femei</option>
+                    <option value={'1'}>Barbati</option>
+                  </Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="category">Category</Label>
+                  <Input type="select" name="category" value={category} onChange={this.handleChange}>
+                    <option value={'0'}>Ceasuri</option>
+                    <option value={'1'}>Genti</option>
+                    <option value={'1'}>Blugi</option>
+                      <option value={'1'}>Camasi</option>
+                  </Input>
+                </FormGroup>
+              </Form>
+            </ModalBody>
+            <ModalFooter>
+              <Button color='primary' onClick={this.onSave}>Save</Button>
+              <Button color='danger' onClick={this.onSave}>Cancel</Button>
+            </ModalFooter>
+          </Modal>
+
+          <Modal isOpen={isOpenProductDeleteModal} toggle={this.onToggleProductDeleteModal}>
+            <ModalHeader>Delete product</ModalHeader>
+            <ModalBody><p>Are you sure you want to delete product: {name}?</p></ModalBody>
+            <ModalFooter>
+              {/* <Button color='primary' onClick={this.onDelete(id)}>Delete</Button> */}
+              <Button color='danger' onClick={this.onToggleProductDeleteModal}>Cancel</Button>
+            </ModalFooter>
+          </Modal>
+        </div>
+      )
+    
+    }
   }
-}

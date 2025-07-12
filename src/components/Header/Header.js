@@ -8,8 +8,8 @@ import './Header.scss'
 export class Header extends Component {
  
   onSelectGender = (gender) => {
-    localStorage.setItem ("gender", gender);
-    this.props.rerenderParentCallback();
+    localStorage.setItem ("gender", gender)
+    this.props.rerenderParentCallback()
   }
 
   render() {
